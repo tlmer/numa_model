@@ -43,7 +43,7 @@ tree, simulator or kernel headers are required.
 ## API version
 
 The headers expose `NUMA_MODEL_API_VERSION_MAJOR/MINOR/PATCH`, a combined
-integer and `numa::kAbiVersion`. This release is API 1.28.0 / ABI 1.
+integer and `numa::kAbiVersion`. This release is API 1.29.0 / ABI 1.
 
 ## Boundaries
 

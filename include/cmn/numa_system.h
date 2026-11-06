@@ -4,6 +4,7 @@
 #pragma once
 
 #include "cmn/wire_node.h"
+#include "cml/cml_tx_scheduler.h"
 #include "gic/endpoint.h"
 #include "gic/gicd.h"
 #include "gic/gicv3_cpu.h"
@@ -56,6 +57,11 @@ public:
     bool send_gicd2(int src, int tgt, const gic::Message& a,
                     const gic::Message& b);
     std::uint64_t gicd_multi_sent() const { return gicd_multi_sent_; }
+    
+    bool enqueue_gicd(int src, int tgt, const gic::Message& m);
+    unsigned flush_gicd(std::size_t max = static_cast<std::size_t>(-1));
+    std::size_t gicd_queued() const { return gicd_sched_.occupancy(); }
+    const std::vector<int>& gicd_flush_order() const { return gicd_flush_order_; }
     gic::Proxy&       gicd(int node)       { return gicd_.at(static_cast<std::size_t>(node)); }
     const gic::Proxy& gicd(int node) const { return gicd_.at(static_cast<std::size_t>(node)); }
 
@@ -126,6 +132,8 @@ private:
     std::uint64_t gicd_sent_ = 0;
     std::uint64_t gicd_multi_sent_ = 0;
     std::uint64_t gicd_rejected_ = 0;
+    cml::TxScheduler gicd_sched_;
+    std::vector<int> gicd_flush_order_;
     std::uint64_t gicd_beats_ = 0;
 };
 
