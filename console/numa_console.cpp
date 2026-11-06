@@ -1,11 +1,12 @@
 // numa_console: small interactive front end for numa_model.
 // Commands: help, info, read <line>, write <line> <byte>, migrate <line> <node>,
-//           slit, perf, quit
+//           slit, perf, tc list|run <id> [n]|all [n]|coverage, quit
 #include "cmn/cpu_port.h"
 #include "cmn/migration.h"
 #include "cmn/numa_system.h"
 #include "cmn/numa_version.h"
 #include "perf/slit.h"
+#include "tc/numa_tc.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -18,6 +19,7 @@ int main() {
     sys.add_node(0, 32);
     sys.add_node(32, 32);
     numa::cmn::CpuPort cpu(sys, 0, 0x000, 4);
+    auto registry = numa::tc::make_builtin_registry();
     std::uint8_t last[64] = {};
     std::printf("numa_model console API %u.%u.%u; type help\n",
                 numa::kApiVersionMajor, numa::kApiVersionMinor,
@@ -31,7 +33,8 @@ int main() {
         if (!std::strcmp(cmd, "quit") || !std::strcmp(cmd, "exit")) break;
         if (!std::strcmp(cmd, "help")) {
             std::printf("help | info | read <line> | write <line> <byte> | "
-                        "migrate <line> <node> | slit | perf | quit\n");
+                        "migrate <line> <node> | slit | perf | "
+                        "tc list|run <id> [n]|all [n]|coverage | quit\n");
         } else if (!std::strcmp(cmd, "info")) {
             std::printf("nodes=%zu api=%u abi=%u dmi=%d\n",
                         sys.node_count(), numa::kApiVersion,
@@ -66,6 +69,38 @@ int main() {
         } else if (!std::strcmp(cmd, "perf")) {
             std::printf("perf: use test_perf_cases in the licensed test set; "
                         "console exposes functional operations only\n");
+        } else if (!std::strcmp(cmd, "tc")) {
+            char sub[32] = {};
+            unsigned long arg = 0, iters = 1;
+            const int sn = std::sscanf(line.c_str(), "%31s %31s %lu %lu", cmd, sub,
+                                       &arg, &iters);
+            if (sn >= 2 && !std::strcmp(sub, "list")) {
+                const auto cov = registry.coverage();
+                for (const auto& item : cov.items) {
+                    if (item.implemented) {
+                        std::printf("%u %s%s\n", item.id, item.name.c_str(),
+                                    item.tested ? " [tested]" : " [untested]");
+                    } else {
+                        std::printf("N/A %s: %s\n", item.name.c_str(),
+                                    item.reason.c_str());
+                    }
+                }
+            } else if (sn >= 3 && !std::strcmp(sub, "run")) {
+                const auto r = registry.run(static_cast<unsigned>(arg),
+                                            static_cast<unsigned>(iters));
+                std::printf("tc run %lu: %s (ran=%u passed=%u failed=%u)\n", arg,
+                            r.ok() ? "PASS" : "FAIL", r.ran, r.passed, r.failed);
+            } else if (sn >= 2 && !std::strcmp(sub, "all")) {
+                const unsigned n = (sn >= 3) ? static_cast<unsigned>(arg) : 1u;
+                const auto r = registry.run_all(n);
+                std::printf("tc all: %s (cases=%u ran=%u passed=%u failed=%u)\n",
+                            r.ok() ? "PASS" : "FAIL", r.cases, r.ran, r.passed,
+                            r.failed);
+            } else if (sn >= 2 && !std::strcmp(sub, "coverage")) {
+                std::cout << registry.coverage_text();
+            } else {
+                std::printf("usage: tc list|run <id> [n]|all [n]|coverage\n");
+            }
         } else {
             std::printf("unknown command\n");
         }

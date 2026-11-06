@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "gic/gicv3_cpu.h"
@@ -16,18 +13,18 @@ public:
         std::uint64_t gicd_base = 0x08000000;
         std::uint64_t gicr_base = 0x080A0000;
         std::uint32_t gicd_length = 0x10000;
-        std::uint32_t gicr_stride = 0x20000;   
+        std::uint32_t gicr_stride = 0x20000;
         unsigned cpu_count = 1;
-        unsigned spi_count = 32;               
-        unsigned ppi_count = 16;               
-        std::uint32_t lpi_base = 8192;         
-        unsigned lpi_count = 256;              
-        bool security_enabled = false;         
-        bool secure_access = false;            
-        
+        unsigned spi_count = 32;
+        unsigned ppi_count = 16;
+        std::uint32_t lpi_base = 8192;
+        unsigned lpi_count = 256;
+        bool security_enabled = false;
+        bool secure_access = false;
+
         bool affinity_routing = true;
-        
-        
+
+
         std::vector<std::uint32_t> affinities;
     };
 
@@ -37,21 +34,21 @@ public:
     unsigned cpu_count() const { return static_cast<unsigned>(cpus_.size()); }
     Gicv3Cpu& cpu(unsigned index) { return cpus_.at(index); }
     const Gicv3Cpu& cpu(unsigned index) const { return cpus_.at(index); }
-    
+
     int spi_target(std::uint32_t intid) const;
-    
+
     void set_secure_access(bool secure) { secure_ = secure; }
     bool secure_access() const { return secure_; }
     std::uint64_t security_rejects() const { return security_rejects_; }
-    
-    
+
+
     bool set_lpi_property(unsigned cpu, std::uint32_t intid,
                           std::uint8_t prio, std::uint8_t group,
                           bool enabled = true);
     bool set_lpi_pending(unsigned cpu, std::uint32_t intid, bool pending);
     bool lpi_pending(unsigned cpu, std::uint32_t intid) const;
 
-    
+
     bool read(std::uint64_t address, unsigned size, std::uint64_t& value) const;
     bool write(std::uint64_t address, unsigned size, std::uint64_t value);
 
@@ -69,13 +66,13 @@ private:
     };
 
     struct Frame {
-        std::uint32_t ctlr = 0;       
-        bool processor_sleep = false; 
-        bool lpi_enabled = false;     
+        std::uint32_t ctlr = 0;
+        bool processor_sleep = false;
+        bool lpi_enabled = false;
         std::uint64_t propbaser = 0;
         std::uint64_t pendbaser = 0;
-        std::uint32_t grpmodr = 0;    
-        std::uint32_t nsacr = 0;      
+        std::uint32_t grpmodr = 0;
+        std::uint32_t nsacr = 0;
         std::vector<LpiProp> lpi_prop;
         std::vector<bool> lpi_pending;
     };
@@ -116,7 +113,7 @@ private:
     void apply_ctlr();
 
     Config cfg_;
-    std::uint32_t ctlr_ = 0;             
+    std::uint32_t ctlr_ = 0;
     bool secure_ = false;
     std::uint32_t gicd_nsacr_ = 0;
     std::vector<std::uint32_t> spi_pending_s_;

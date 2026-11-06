@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include <cstdint>
@@ -30,7 +27,7 @@ public:
 
     bool enable_vpe(std::uint32_t vpe);
     bool disable_vpe(std::uint32_t vpe);
-    
+
     bool set_vpt_bases(std::uint32_t vpe, std::uint64_t propbaser,
                        std::uint64_t pendbaser);
     std::uint64_t vpropbaser(std::uint32_t vpe) const;
@@ -55,8 +52,8 @@ private:
         std::unordered_map<std::uint32_t, Prop> vlpis;
         std::uint64_t vpropbaser = 0;
         std::uint64_t vpendbaser = 0;
-        std::vector<std::uint8_t> vprop;   
-        std::vector<std::uint8_t> vpend;   
+        std::vector<std::uint8_t> vprop;
+        std::vector<std::uint8_t> vpend;
     };
 
     Config cfg_;

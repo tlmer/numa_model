@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "cml/cml_txn.h"
@@ -13,11 +10,12 @@ namespace numa::cmn {
 
 constexpr unsigned kRaLineBytes = 64;
 
+
 struct RaCompletion {
     std::uint16_t txnid    = 0;
-    std::uint64_t addr     = 0;       
+    std::uint64_t addr     = 0;
     std::uint8_t  reqop    = 0;
-    bool          ok       = false;   
+    bool          ok       = false;
     bool          has_data = false;
     std::uint8_t  data[kRaLineBytes] = {};
 };
@@ -27,18 +25,17 @@ public:
     explicit RaAgent(unsigned max_outstanding = 16,
                      std::uint32_t timeout_ticks = 1000);
 
-    
+
     bool issue(std::uint16_t txnid, std::uint8_t reqop, std::uint64_t line);
 
-    
-    
+
     bool on_rsp(std::uint32_t rsp_dw, bool has_data,
                 const std::uint8_t* data, RaCompletion& out);
 
-    
+
     void tick();
 
-    
+
     bool pop(RaCompletion& c);
 
     std::size_t pending() const { return txn_.outstanding(); }

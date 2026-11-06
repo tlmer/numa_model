@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "gic/dgi.h"
@@ -11,18 +8,20 @@
 
 namespace numa::gic {
 
+
 struct DeliveredSgi {
     std::uint8_t  opcode = kDgiSgi;
-    bool          state  = false;   
-    bool          all    = false;   
-    std::uint8_t  sgi    = 0;       
-    std::uint8_t  sgt    = 0;       
-    std::uint16_t list   = 0;       
-    std::uint8_t  chip   = 0;       
-    std::uint8_t  tri    = 0;       
-    std::uint8_t  tsize  = 0;       
-    std::uint8_t  keep   = 0;       
+    bool          state  = false;
+    bool          all    = false;
+    std::uint8_t  sgi    = 0;
+    std::uint8_t  sgt    = 0;
+    std::uint16_t list   = 0;
+    std::uint8_t  chip   = 0;
+    std::uint8_t  tri    = 0;
+    std::uint8_t  tsize  = 0;
+    std::uint8_t  keep   = 0;
 };
+
 
 struct DeliveredSpi {
     std::uint8_t opcode   = kDgiSpi;
@@ -47,6 +46,7 @@ struct DeliveredSpi {
     std::uint8_t keep  = 0;
 };
 
+
 struct DeliveredLpi {
     std::uint8_t  opcode    = kDgiLpi;
     std::uint8_t  stream    = 0;
@@ -65,6 +65,7 @@ struct DeliveredLpi {
     std::uint8_t  keep      = 0;
 };
 
+
 struct DeliveredLpiAck {
     std::uint8_t  opcode    = kDgiLpiAck;
     std::uint8_t  err       = 0;
@@ -81,6 +82,7 @@ struct DeliveredLpiAck {
     std::uint8_t  keep      = 0;
 };
 
+
 struct DeliveredVsgi {
     std::uint8_t  opcode    = kDgiVsgi;
     bool          allow_hzd = false;
@@ -94,6 +96,7 @@ struct DeliveredVsgi {
     std::uint8_t  keep      = 0;
 };
 
+
 struct DeliveredVsgiAck {
     std::uint8_t opcode = kDgiVsgi;
     bool         reject = false;
@@ -104,6 +107,7 @@ struct DeliveredVsgiAck {
     std::uint8_t tsize  = 0;
     std::uint8_t keep   = 0;
 };
+
 
 struct DeliveredVmovp {
     std::uint8_t  opcode    = kDgiVmovp;
@@ -126,6 +130,7 @@ struct DeliveredVmovp {
     std::uint8_t  keep      = 0;
 };
 
+
 struct DeliveredVmovpAck {
     std::uint8_t opcode = kDgiVmovp;
     std::uint8_t err    = 0;
@@ -134,6 +139,7 @@ struct DeliveredVmovpAck {
     std::uint8_t tsize  = 0;
     std::uint8_t keep   = 0;
 };
+
 
 struct DeliveredCmd {
     std::uint8_t  opcode    = kDgiCmd;
@@ -153,6 +159,7 @@ struct DeliveredCmd {
     std::uint8_t  keep      = 0;
 };
 
+
 struct DeliveredCmdAck {
     std::uint8_t opcode = kDgiCmdAck;
     std::uint8_t err    = 0;
@@ -167,14 +174,16 @@ struct DeliveredCmdAck {
     std::uint8_t keep   = 0;
 };
 
+
 struct DeliveredRwp {
     std::uint8_t opcode = kDgiRwp;
-    std::uint8_t state  = 1;   
+    std::uint8_t state  = 1;
     std::uint8_t chip   = 0;
     std::uint8_t tri    = 0;
     std::uint8_t tsize  = 0;
     std::uint8_t keep   = 0;
 };
+
 
 struct DeliveredRegAccess {
     std::uint8_t  opcode = kDgiRegWrite;
@@ -188,6 +197,7 @@ struct DeliveredRegAccess {
     std::uint8_t  tsize  = 0;
     std::uint8_t  keep   = 0;
 };
+
 
 struct DeliveredPtb {
     std::uint8_t  opcode    = kDgiPtb;
@@ -204,6 +214,7 @@ struct DeliveredPtb {
     std::uint8_t  keep      = 0;
 };
 
+
 struct DeliveredRegWack {
     std::uint8_t opcode = kDgiRegWack;
     bool         defer  = false;
@@ -213,6 +224,7 @@ struct DeliveredRegWack {
     std::uint8_t tsize  = 0;
     std::uint8_t keep   = 0;
 };
+
 
 struct DeliveredRegData {
     std::uint8_t  opcode = kDgiRegRdata;
@@ -225,11 +237,10 @@ struct DeliveredRegData {
 
 class Endpoint {
 public:
-    
+
     explicit Endpoint(std::uint8_t tri = 0) : tri_(tri) {}
 
-    
-    
+
     bool on_message(std::uint64_t payload33);
 
     bool pop(DeliveredSgi& s);
@@ -313,11 +324,11 @@ public:
     std::uint64_t reg_wack_delivered() const { return reg_wack_delivered_; }
     std::uint64_t reg_data_delivered() const { return reg_data_delivered_; }
     std::uint64_t ptb_delivered() const { return ptb_delivered_; }
-    
+
     std::uint64_t other_op     () const { return other_op_; }
     std::uint64_t tri_mismatch () const { return tri_mismatch_; }
-    std::uint64_t overflow     () const { return overflow_; }   
-    std::uint64_t short_packet () const { return short_packet_; } 
+    std::uint64_t overflow     () const { return overflow_; }
+    std::uint64_t short_packet () const { return short_packet_; }
 
 private:
     std::uint8_t tri_;

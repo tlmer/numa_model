@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include <cstdint>
@@ -12,6 +9,7 @@ namespace numa::cml {
 constexpr unsigned kSidW  = 10;
 constexpr unsigned kFlitW = 512;
 constexpr unsigned kDw    = 32;
+
 
 constexpr std::uint32_t kCntl = 0x3C41;
 
@@ -51,6 +49,7 @@ struct MsgDef {
     unsigned total;
     std::vector<Field> fields;
 };
+
 
 inline const MsgDef kReqin{
     "REQIN", 182,
@@ -134,6 +133,7 @@ inline const MsgDef kLaAckin{
         {"VALID", 0, 1}, {"TYPE", 1, 2}, {"TXNID", 3, 16},
     }};
 
+
 inline const MsgDef kUcmiscCrdDw0{
     "UCMISC_CRD_DW0", 32,
     {
@@ -148,6 +148,7 @@ inline const MsgDef kUcmiscCrdDw1{
         {"PAD", 0, 16}, {"MISCCRD", 16, 8}, {"SNPCRD", 24, 8},
     }};
 
+
 inline const MsgDef kLinkCtrl{
     "LINK_CTRL", 512,
     {
@@ -156,6 +157,7 @@ inline const MsgDef kLinkCtrl{
         {"LLCTRL", 32, 4}, {"SUBTYPE", 36, 4}, {"SET_ZEROES", 40, 24},
         {"PAYLOAD", 64, 64},
     }};
+
 
 inline const MsgDef kHdr{
     "CCIX20_HDR", 64,

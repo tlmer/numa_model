@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include <cstdint>
@@ -10,21 +7,21 @@ namespace numa::cmn {
 
 class ExclusiveMonitor {
 public:
-    
+
     void grant(int node, std::uint64_t line, std::uint16_t txnid);
 
-    
+
     std::size_t break_line(std::uint64_t line, int writer);
 
-    
+
     bool commit(int node, std::uint64_t line);
 
-    
+
     void clear(int node);
 
     bool held(int node, std::uint64_t line) const;
     bool any(int node) const;
-    std::uint64_t line(int node) const;      
+    std::uint64_t line(int node) const;
     std::size_t holders() const { return res_.size(); }
 
     std::uint64_t granted()     const { return granted_; }

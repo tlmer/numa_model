@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include <cstdint>
@@ -8,6 +5,7 @@
 #include <vector>
 
 namespace numa::cmn {
+
 
 enum class SnoopOp : std::uint8_t {
     SNPTOANY = 0x0,
@@ -22,38 +20,38 @@ struct SnoopReq {
     SnoopOp       op     = SnoopOp::SNPMAKEI;
     std::uint64_t line   = 0;
     std::uint16_t txnid  = 0;
-    int           target = -1;    
+    int           target = -1;
 };
 
 struct SnoopLine {
-    std::uint32_t     version = 0;          
-    std::vector<int>  sharers;              
-    int               owner   = -1;         
+    std::uint32_t     version = 0;
+    std::vector<int>  sharers;
+    int               owner   = -1;
 };
 
 class SnoopDirectory {
 public:
-    
+
     void note_read(std::uint64_t line, int node);
-    
+
     std::vector<int> note_write(std::uint64_t line, int node);
 
-    
+
     std::vector<SnoopReq> snoops_for_exclusive(std::uint64_t line,
                                                std::uint16_t txnid,
                                                int requester) const;
-    
+
     std::vector<SnoopReq> snoops_for_shared(std::uint64_t line,
                                             std::uint16_t txnid,
                                             int requester) const;
 
-    
+
     void apply_snoop_resp(const SnoopReq& req);
 
-    
+
     void invalidate_line(std::uint64_t line);
 
-    
+
     bool is_stale(std::uint64_t line, int node) const;
     std::uint32_t version(std::uint64_t line) const;
     const std::vector<int>& sharers(std::uint64_t line) const;

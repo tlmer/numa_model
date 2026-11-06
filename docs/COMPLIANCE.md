@@ -32,12 +32,12 @@ This file records applicability against the onetest customer checklist.
 | Clause | Status |
 |---|---|
 | T1 DTS template/load entry | N/A: no device tree. |
-| T2 testcase registry + independent ioctl | Not implemented in this public subset; test binaries are in the licensed package. |
+| T2 testcase registry + independent ioctl | PASS (registry) / N/A (ioctl): `tc/numa_tc.h` + console `tc` command; no kernel/UAPI surface. |
 | T3 MODEL_TRACE | PARTIAL: example/console print English summaries; no `MODEL_TRACE` environment switch. |
-| T4 coverage output | Not implemented in this public subset. |
-| T5 run-all | N/A: no testcase registry in this subset. |
-| T6 repeat/iterations | N/A: no testcase registry. |
-| T7 user-defined tests | N/A: no testcase registry. |
+| T4 coverage output | PASS: `Registry::coverage_text()` lists tested/untested items and documented N/A gaps with reasons; console `tc coverage`. |
+| T5 run-all | PASS: `Registry::run_all()`; console `tc all`. |
+| T6 repeat/iterations | PASS: `run(id, n)` / `run_all(n)`; zero means one; failures stay explicit. |
+| T7 user-defined tests | PASS: `Registry::add()` accepts caller test functions; `add_gap()` documents N/A items. |
 | T8 console | PASS. |
 | T9 reuse Linux user-space components | N/A: this is a fabric model, not a Linux driver client. |
 | T10 shader delivery | N/A. |
@@ -46,7 +46,9 @@ This file records applicability against the onetest customer checklist.
 
 - `sh verify.sh`: builds example + console from `include/` + `lib/`; example
   prints `NUMA_EXAMPLE: PASS`.
-- 34 public headers compile in one translation unit.
+- 35 public headers compile in one translation unit.
+- Console `tc all 2` returns PASS and `tc coverage` marks the six built-in
+  cases as tested.
 - Public text CJK scan: 0.
 - Binary CJK string scan: 0.
 - Absolute path leak scan in the archive: 0.

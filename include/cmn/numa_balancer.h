@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "cmn/migration.h"
@@ -12,11 +9,11 @@
 namespace numa::cmn {
 
 struct NumaBalancerConfig {
-    unsigned lines_per_page        = 64;  
-    unsigned min_samples           = 8;   
-    unsigned remote_ratio_percent  = 60;  
-    unsigned cooldown_ticks        = 4;   
-    unsigned max_migrations_per_tick = 2; 
+    unsigned lines_per_page        = 64;
+    unsigned min_samples           = 8;
+    unsigned remote_ratio_percent  = 60;
+    unsigned cooldown_ticks        = 4;
+    unsigned max_migrations_per_tick = 2;
 };
 
 class NumaBalancer {
@@ -34,10 +31,10 @@ public:
     NumaBalancer(NumaSystem& sys, MigrationManager& mm,
                  NumaBalancerConfig cfg = {});
 
-    
+
     void record_access(std::uint64_t line, int accessor_node);
 
-    
+
     unsigned tick();
 
     const Stats& stats() const { return stats_; }
@@ -46,7 +43,7 @@ public:
 
 private:
     struct PageStat {
-        std::unordered_map<int, unsigned> count;  
+        std::unordered_map<int, unsigned> count;
         std::uint64_t last_migrate_epoch = 0;
         bool          migrated_once = false;
     };

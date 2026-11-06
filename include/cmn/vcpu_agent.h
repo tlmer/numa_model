@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "cmn/numa_system.h"
@@ -13,7 +10,7 @@ namespace numa::cmn {
 
 class VcpuAgent {
 public:
-    
+
     VcpuAgent(NumaSystem& sys, int node, std::uint16_t txnid_base = 0,
               unsigned max_outstanding = 16,
               std::uint32_t timeout_ticks = 1000);
@@ -21,9 +18,9 @@ public:
     bool read(std::uint64_t line);
     bool write(std::uint64_t line, const std::uint8_t data[kLineBytes]);
 
-    
+
     void pump();
-    
+
     void tick();
     bool pop(RaCompletion& c);
 

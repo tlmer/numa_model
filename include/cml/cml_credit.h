@@ -1,26 +1,25 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
-#include "cml/cml_fields.h"   
+#include "cml/cml_fields.h"
 
 #include <array>
 #include <cstdint>
 
 namespace numa::cml {
 
+
 std::uint8_t lcrd_encode(unsigned count);
 unsigned     lcrd_decode(std::uint8_t code);
+
 
 class CreditPool {
 public:
     explicit CreditPool(unsigned init = 0, unsigned max = 0xFFFFFFFFu)
         : count_(init), max_(max) {}
 
-    
+
     bool grant(unsigned n = 1);
-    
+
     bool consume(unsigned n = 1);
 
     unsigned count() const { return count_; }
@@ -37,6 +36,7 @@ private:
     std::uint64_t rejected_ = 0;
 };
 
+
 class CreditSet {
 public:
     CreditSet(unsigned l_init = 256, unsigned p_init = 0);
@@ -44,17 +44,15 @@ public:
     CreditPool& l(CrdClass c) { return l_[static_cast<unsigned>(c)]; }
     CreditPool& p(CrdClass c) { return p_[static_cast<unsigned>(c)]; }
 
-    
+
     bool can_send(CrdClass c) const {
         const auto i = static_cast<unsigned>(c);
         return l_[i].count() > 0 && p_[i].count() > 0;
     }
-    bool send(CrdClass c);              
+    bool send(CrdClass c);
     bool grant_p(CrdClass c, unsigned n = 1);
 
-    
-    
-    
+
     bool grant_p_bundle(unsigned req, unsigned dat, unsigned snp,
                         unsigned misc);
     std::uint64_t rejected_bundle() const { return rejected_bundle_; }
@@ -65,6 +63,7 @@ private:
     std::uint64_t rejected_bundle_ = 0;
 };
 
+
 class SharedCreditBank {
 public:
     static constexpr unsigned kClasses =
@@ -74,9 +73,9 @@ public:
                               unsigned shared_init = 0,
                               unsigned shared_max = 0xFFFFFFFFu);
 
-    
+
     bool consume(CrdClass c, unsigned n = 1);
-    
+
     bool give_back(CrdClass c, unsigned n = 1);
 
     unsigned dedicated(CrdClass c) const;
@@ -92,9 +91,9 @@ public:
 
 private:
     struct ClassState {
-        unsigned dedicated    = 0;   
-        unsigned out_dedicated = 0;  
-        unsigned out_shared    = 0;  
+        unsigned dedicated    = 0;
+        unsigned out_dedicated = 0;
+        unsigned out_shared    = 0;
     };
 
     std::array<ClassState, kClasses> st_;

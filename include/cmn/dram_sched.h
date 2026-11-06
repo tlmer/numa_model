@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include <cstdint>
@@ -10,19 +7,19 @@ namespace numa::cmn {
 
 struct DramConfig {
     unsigned line_bytes     = 64;
-    unsigned bytes_per_tick = 32;   
-    unsigned service_ticks  = 2;    
+    unsigned bytes_per_tick = 32;
+    unsigned service_ticks  = 2;
     unsigned banks          = 1;
-    unsigned aging_ticks    = 16;   
+    unsigned aging_ticks    = 16;
     unsigned qos_levels     = 4;
 };
 
 struct DramDone {
     std::uint64_t id      = 0;
     std::uint64_t arrive  = 0;
-    std::uint64_t done    = 0;      
-    std::uint64_t latency = 0;      
-    unsigned      qos     = 0;      
+    std::uint64_t done    = 0;
+    std::uint64_t latency = 0;
+    unsigned      qos     = 0;
     unsigned      bytes   = 0;
 };
 
@@ -30,10 +27,10 @@ class DramScheduler {
 public:
     explicit DramScheduler(const DramConfig& cfg = DramConfig());
 
-    
+
     std::uint64_t submit(unsigned bytes, unsigned qos);
 
-    
+
     void tick(std::vector<DramDone>& done);
 
     std::uint64_t now() const { return now_; }
@@ -55,12 +52,12 @@ private:
         std::uint64_t arrive = 0;
         unsigned bytes = 0;
         unsigned qos = 0;
-        unsigned service = 1;   
-        unsigned remaining = 1; 
+        unsigned service = 1;
+        unsigned remaining = 1;
         bool     started = false;
     };
 
-    unsigned effective_qos(const Req& r) const;   
+    unsigned effective_qos(const Req& r) const;
     Req* pick(unsigned bank);
 
     DramConfig cfg_;

@@ -68,9 +68,31 @@ template is not used by this standalone model.
 
 ## 7. Performance and testcases
 
-The library does not contain a mandatory trace or performance counter API in
-this subset. The licensed package includes model test binaries, including
-performance and soak cases. The console exposes functional operations only.
+`include/tc/numa_tc.h` provides a public testcase registry:
+
+```cpp
+#include "tc/numa_tc.h"
+auto reg = numa::tc::make_builtin_registry();
+auto all = reg.run_all(/*iterations=*/2);   // repeatable, failures aggregated
+auto cov = reg.coverage();                  // tested/untested + reasons
+```
+
+The six built-in cases cover API version, system routing/read-write, TLB
+invalidation, page migration, SLIT calibration and C2C request/response.
+Three documented N/A gaps (OS ioctl channel, RTL/simulator execution, QEMU
+system level) appear in the coverage report with reasons. The console exposes
+the same channel:
+
+```
+tc list
+tc run 4 10
+tc all 2
+tc coverage
+```
+
+The registry is plain C++17, single-threaded and simulator-independent.
+Performance and soak binaries remain in the licensed package; the public
+subset does not claim a production performance number.
 
 ## 8. Error handling and limits
 

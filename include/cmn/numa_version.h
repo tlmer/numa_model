@@ -1,10 +1,7 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #define NUMA_MODEL_API_VERSION_MAJOR 1
-#define NUMA_MODEL_API_VERSION_MINOR 29
+#define NUMA_MODEL_API_VERSION_MINOR 30
 #define NUMA_MODEL_API_VERSION_PATCH 0
 #define NUMA_MODEL_API_VERSION \
     (NUMA_MODEL_API_VERSION_MAJOR * 10000 + \

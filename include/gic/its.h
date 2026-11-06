@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "gic/gicd_gicr.h"
@@ -15,13 +12,13 @@ namespace numa::gic {
 class Its {
 public:
     enum class Op {
-        MapCollection,   
-        MapDevice,       
-        MapEvent,        
-        MoveEvent,       
-        Sync,            
-        Invalidate,      
-        Discard          
+        MapCollection,
+        MapDevice,
+        MapEvent,
+        MoveEvent,
+        Sync,
+        Invalidate,
+        Discard
     };
 
     struct Command {
@@ -44,7 +41,7 @@ public:
         unsigned cpu_count = 1;
         std::size_t max_commands = 256;
         std::uint64_t gits_base = 0x08080000;
-        std::uint32_t gits_length = 0x20000;   
+        std::uint32_t gits_length = 0x20000;
         std::uint32_t queue_bytes = 4096;
         std::uint64_t gicr_base = 0x080A0000;
         std::uint32_t gicr_stride = 0x20000;
@@ -55,22 +52,22 @@ public:
 
     void attach(GicdGicr* gic) { cfg_.gic = gic; }
     bool enqueue(const Command& c);
-    unsigned run();                 
+    unsigned run();
     std::size_t pending_commands() const { return q_.size(); }
 
-    
+
     bool translate(std::uint32_t device, std::uint32_t event,
                    std::uint32_t& lpi, unsigned& cpu) const;
-    
+
     bool deliver(std::uint32_t device, std::uint32_t event);
 
-    
+
     static void encode(const Command& c, std::uint64_t w[4]);
     static bool decode(const std::uint64_t w[4], Command& c,
                        std::uint64_t gicr_base = 0x080A0000,
                        std::uint32_t gicr_stride = 0x20000);
 
-    
+
     bool read_gits(std::uint64_t address, unsigned size, std::uint64_t& v) const;
     bool write_gits(std::uint64_t address, unsigned size, std::uint64_t v);
     void set_translater_device(std::uint32_t device) {
@@ -106,7 +103,7 @@ private:
     bool collection_cpu(std::uint32_t collection, unsigned& cpu) const;
 
     Config cfg_;
-    std::unordered_map<std::uint32_t, unsigned> collections_; 
+    std::unordered_map<std::uint32_t, unsigned> collections_;
     std::unordered_map<std::uint32_t, Device> devices_;
     std::deque<Command> q_;
     std::vector<std::uint8_t> gits_queue_;

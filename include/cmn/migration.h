@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "cmn/numa_system.h"
@@ -20,17 +17,16 @@ public:
         std::uint64_t dvm      = 0;
     };
 
-    
+
     explicit MigrationManager(NumaSystem& sys,
                               cml::DvmController* dvm = nullptr,
                               unsigned lines_per_page = 64);
 
-    
-    
+
     bool migrate_page(std::uint64_t page_first_line, int to_node,
                       std::uint64_t va = 0);
 
-    
+
     bool migrate_line(std::uint64_t line, int to_node);
 
     const Stats& stats() const { return stats_; }

@@ -1,6 +1,3 @@
-// numa_model public API. Commercial license; see LICENSE_NOTICE.md.
-// SPDX-License-Identifier: LicenseRef-Proprietary
-
 #pragma once
 
 #include "cml/cml_credit.h"
@@ -19,23 +16,20 @@ public:
     CmlCreditLink(SharedCreditBank& bank, cxs::CxsLinkModel& link)
         : bank_(bank), link_(link) {}
 
-    
-    
+
     bool submit(CrdClass c, const cxs::CxsFlit& flit, std::uint32_t packet_id);
 
-    
-    
+
     bool submit_packet(CrdClass c, const std::vector<cxs::CxsFlit>& flits,
                        std::uint32_t packet_id);
 
-    
+
     unsigned pump();
 
-    
+
     bool complete(std::uint32_t packet_id);
 
-    
-    
+
     bool cancel(std::uint32_t packet_id);
 
     std::size_t queued() const;
@@ -56,7 +50,7 @@ public:
 private:
     struct Item {
         std::vector<cxs::CxsFlit> flits;
-        std::size_t next = 0;         
+        std::size_t next = 0;
         std::uint32_t packet_id = 0;
         bool credit_held = false;
     };
