@@ -15,8 +15,8 @@ implementation sources are not part of this repository.
 - CML_SMP low-version message path and CHI C2C Issue-B style model path.
 - Read, write, partial write, atomics, CMO, DVM, snoop, retry and credit models.
 - GICv3-compatible distributor, redistributor, ITS/vPE and LPI models.
-- Public testcase registry with repeat/all/coverage and documented N/A gaps
-  (`include/tc/numa_tc.h`; console `tc` command).
+- Public testcase registry with repeat/all/coverage, JSON/JUnit export and
+  documented N/A gaps (`include/tc/numa_tc.h`; console `tc` command).
 - ACPI SRAT/SLIT/MADT/PPTT/IORT generation utilities in the licensed package.
 - Plain C++17 API; no simulator, kernel or operating-system dependency.
 
@@ -45,7 +45,7 @@ tree, simulator or kernel headers are required.
 ## API version
 
 The headers expose `NUMA_MODEL_API_VERSION_MAJOR/MINOR/PATCH`, a combined
-integer and `numa::kAbiVersion`. This release is API 1.30.0 / ABI 1.
+integer and `numa::kAbiVersion`. This release is API 1.31.0 / ABI 1.
 
 ## Boundaries
 

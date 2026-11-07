@@ -88,6 +88,10 @@ struct CoverageReport {
 
 
     std::string text() const;
+
+    std::string json() const;
+
+    std::string junit() const;
 };
 
 class Registry {
