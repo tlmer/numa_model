@@ -76,6 +76,7 @@ constexpr std::uint8_t kRespOpCompDataUcSc  = 0x1;
 constexpr std::uint8_t kRespOpSmpReqResp1   = 0x6;
 constexpr std::uint8_t kRespAttrNcbWrData   = 0x0;
 constexpr std::uint8_t kRespAttrSmpCompAck  = 0x3;
+constexpr std::uint8_t kRespAttrCompDataUc  = 0x4;
 
 
 constexpr std::uint8_t kReqOpReadPreferUnique = 0x0E;
