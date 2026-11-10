@@ -83,6 +83,50 @@ constexpr std::uint8_t kReqOpReadPreferUnique = 0x0E;
 constexpr std::uint8_t kReqOpWriteUniqueZero  = 0x2F;
 
 
+constexpr std::uint8_t kReqOpAtomicStoreBase = 0x40;
+constexpr std::uint8_t kReqOpAtomicLoadBase  = 0x50;
+constexpr std::uint8_t kReqOpAtomicSwap      = 0x60;
+constexpr std::uint8_t kReqOpAtomicCompare   = 0x61;
+
+inline std::uint8_t chi_atomic_to_cml(std::uint8_t chi) {
+    if (chi >= 0x28 && chi <= 0x2F) {
+        return static_cast<std::uint8_t>(kReqOpAtomicStoreBase + (chi - 0x28));
+    }
+    if (chi >= 0x30 && chi <= 0x37) {
+        return static_cast<std::uint8_t>(kReqOpAtomicLoadBase + (chi - 0x30));
+    }
+    if (chi == 0x38) return kReqOpAtomicSwap;
+    if (chi == 0x39) return kReqOpAtomicCompare;
+    return 0;
+}
+
+inline std::uint8_t cml_atomic_to_chi(std::uint8_t cml) {
+    if (cml >= 0x40 && cml <= 0x47) {
+        return static_cast<std::uint8_t>(0x28 + (cml - 0x40));
+    }
+    if (cml >= 0x50 && cml <= 0x57) {
+        return static_cast<std::uint8_t>(0x30 + (cml - 0x50));
+    }
+    if (cml == kReqOpAtomicSwap) return 0x38;
+    if (cml == kReqOpAtomicCompare) return 0x39;
+    return 0;
+}
+
+inline bool is_cml_atomic_op(std::uint8_t reqop) {
+    return cml_atomic_to_chi(reqop) != 0;
+}
+
+inline bool is_cml_atomic_load(std::uint8_t reqop) {
+    const std::uint8_t chi = cml_atomic_to_chi(reqop);
+    return chi >= 0x30 && chi <= 0x39;
+}
+
+inline bool is_cml_atomic_like(std::uint8_t reqop) {
+    return (reqop >= 0x40 && reqop <= 0x61) ||
+           (reqop >= 0xC0 && reqop <= 0xE1);
+}
+
+
 constexpr std::uint8_t kWireTypeMem = 0b0001;
 constexpr std::uint8_t kWireTypeSnp = 0b0010;
 constexpr std::uint8_t kWireRspTypeNd  = 0b1000;

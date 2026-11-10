@@ -144,6 +144,9 @@ public:
 
     std::uint64_t  dup_dropped() const { return dup_dropped_; }
     std::uint64_t  snoops_issued() const { return snoops_issued_; }
+    std::uint64_t  unsupported_wire_reqs() const {
+        return unsupported_wire_reqs_;
+    }
 
 private:
 
@@ -166,6 +169,7 @@ private:
     SnoopDirectory snoop_;
     std::unordered_set<std::uint64_t> adopted_;
     std::uint64_t  snoops_issued_ = 0;
+    std::uint64_t  unsupported_wire_reqs_ = 0;
     ExclusiveMonitor excl_;
     cml::Tlb*      tlb_ = nullptr;
     std::uint64_t  dvm_handled_ = 0;
@@ -181,6 +185,11 @@ bool is_read_op(std::uint8_t reqop);
 bool is_atomic_op(std::uint8_t reqop);
 bool is_atomic_load(std::uint8_t reqop);
 
+bool is_zero_write_op(std::uint8_t reqop);
+bool is_ccix_dvm_op(std::uint8_t reqop);
+bool is_ccix_combined_write_op(std::uint8_t reqop);
+bool is_ccix_read_cmo_op(std::uint8_t reqop);
+bool is_ccix_control_op(std::uint8_t reqop);
 
 bool is_write_op(std::uint8_t reqop);
 
